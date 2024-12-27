@@ -137,15 +137,19 @@ jobs:
     # Lấy External IP của Prometheus
     - name: Get Prometheus External IP
       id: get-prometheus-ip
-      run: |-
+      run: |
         IP=$(kubectl get svc prometheus-server -n ${{ env.PROMETHEUS_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        echo "Prometheus External IP: $IP"
-        echo "::set-output name=prometheus_ip::$IP"
+        if [[ -z "$IP" ]]; then
+          echo "Prometheus External IP is not available."
+          exit 1
+        fi
+        echo "PROMETHEUS_EXTERNAL_IP=$IP" >> $GITHUB_ENV
 
-# Gửi Metrics đến Prometheus
+    # Gửi Metrics đến Prometheus
     - name: Send Metrics to Prometheus
-      run: |-
-       echo "ci_pipeline_status{job='build', status='success'} 1" | curl --data-binary @- \
-       http://${{ steps.get-prometheus-ip.outputs.prometheus_ip }}:9091/metrics/job/github-actions
+      run: |
+        echo "ci_pipeline_status{job='build', status='success'} 1" | \
+        curl --data-binary @- http://$PROMETHEUS_EXTERNAL_IP:9091/metrics/job/github-actions
+
 
       
