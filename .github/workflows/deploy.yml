@@ -119,6 +119,7 @@ jobs:
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           .
+          working-directory: .
 
     # Scan Docker image with Trivy
     - name: Trivy
@@ -157,7 +158,7 @@ jobs:
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
-        
+
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
