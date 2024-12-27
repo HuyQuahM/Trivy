@@ -123,7 +123,6 @@ jobs:
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           .
-          working-directory: .
 
     # Scan Docker image with Trivy
     - name: Trivy
