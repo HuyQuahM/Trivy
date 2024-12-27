@@ -55,7 +55,7 @@ jobs:
     - name: Scan Docker image with Trivy
       run: |-
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-        ./trivy image --severity CRITICAL,HIGH "$GAR_ZONE-docker.pkg.dev/$PROJECT_ID/$GAR_REPO/$IMAGE:$IMAGE_TAG"
+        ./bin/trivy image --severity CRITICAL,HIGH "$GAR_ZONE/$PROJECT_ID/$GAR_REPO/$IMAGE:$IMAGE_TAG"
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
