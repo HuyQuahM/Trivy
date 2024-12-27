@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-ci-cd
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  ci-cd-dashboard.json: |
+    {
+      "title": "CI/CD Pipeline Dashboard",
+      "panels": [
+        {
+          "type": "graph",
+          "title": "Metric",
+          "targets": [
+            {
+              "expr": "ci_pipeline_status",
+              "legendFormat": "{{job}} - {{status}}",
+              "interval": "10s"
+            }
+          ]
+        }
+      ]
+    }
