@@ -134,6 +134,18 @@ jobs:
     - name: Display External IP
       run: echo "Grafana External IP ${{ steps.get-ip.outputs.external_ip }}"
 
+    # Wait for Prometheus to be ready
+    - name: Wait for Prometheus
+      run: |
+        for i in {1..10}; do
+          if curl -sf http://prometheus-server.monitoring.svc.cluster.local:9090/; then
+            echo "Prometheus is ready."
+            break
+          fi
+          echo "Waiting for Prometheus..."
+          sleep 10
+        done
+
     # Send Metrics to Prometheus   
     - name: Send Metrics to Prometheus
       run: |-
