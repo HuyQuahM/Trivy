@@ -59,7 +59,7 @@ jobs:
         helm upgrade --install prometheus prometheus-community/prometheus \
           --namespace ${{ env.PROMETHEUS_NAMESPACE }} \
           --create-namespace
-          
+
     # Apply Prometheus Ingress YAML
     - name: Configure Prometheus Ingress
       run: |
@@ -75,6 +75,7 @@ jobs:
           --set adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
           --set service.type=LoadBalancer \
           --create-namespace
+
     # Build the Docker image
     - name: Build
       run: |-
@@ -83,17 +84,20 @@ jobs:
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           .
+
     # Scan Docker image with Trivy
     - name: Trivy
       run: |-
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
         ./bin/trivy image --severity CRITICAL,HIGH --format json --output trivy-report.json $GAR_ZONE-docker.pkg.dev/$PROJECT_ID/$GAR_REPO/$IMAGE:$IMAGE_TAG
+    
     #Upload Trivy Scan Report
     - name: Trivy Report
       uses: actions/upload-artifact@v3
       with:
         name: trivy-scan-report
         path: trivy-report.json
+
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
@@ -110,13 +114,13 @@ jobs:
     - name: Configure Grafana Dashboard
       run: |-
         echo "Applying Grafana dashboard..."
-        kubectl apply -f grafana-dashboard.yaml
+        kubectl apply -f Helm/grafana-dashboard.yaml
 
     # Configure Nginx for Grafana
     - name: Configure Nginx for Grafana
       run: |-
         echo "Applying Nginx configuration for Grafana..."
-        kubectl apply -f nginx-grafana.yaml
+        kubectl apply -f Helm/nginx-grafana.yaml
     
     # Get External IP
     - name: Get External IP
