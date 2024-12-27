@@ -98,6 +98,13 @@ jobs:
       with:
         credentials_json: '${{ secrets.GKE_SA_KEY }}'
 
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v2.3.0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
     - name: Docker configuration
@@ -138,6 +145,19 @@ jobs:
     needs: [setup-cluster, deploy-monitoring, build-publish]
     steps:
 
+    # Setup gcloud CLI
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2.1.7'
+      with:
+        credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v2.3.0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
