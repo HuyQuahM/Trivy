@@ -55,7 +55,7 @@ jobs:
     - name: Trivy
       run: |-
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-         ./bin/trivy image --severity CRITICAL,HIGH "micro:test"
+        ./bin/trivy image --severity CRITICAL,HIGH "$IMAGE:$IMAGE_TAG"
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
