@@ -59,6 +59,11 @@ jobs:
         helm upgrade --install prometheus prometheus-community/prometheus \
           --namespace ${{ env.PROMETHEUS_NAMESPACE }} \
           --create-namespace
+          
+    # Apply Prometheus Ingress YAML
+    - name: Configure Prometheus Ingress
+      run: |
+        kubectl apply -f Helm/prometheus-ingress.yaml
 
     # Deploy Grafana
     - name: Deploy Grafana
@@ -99,11 +104,8 @@ jobs:
       run: |-
         kubectl apply -f deployment.yaml -f service.yaml
         kubectl get pods
-    #    
-    - name: Send Metrics to Prometheus
-      run: |-
-        echo "ci_pipeline_status{job='build', status='success'} 1" | curl --data-binary @- http://prometheus-server.monitoring.svc.cluster.local:9091/metrics/job/github-actions
-    
+
+
     # Configure Grafana Dashboard
     - name: Configure Grafana Dashboard
       run: |-
@@ -115,15 +117,22 @@ jobs:
       run: |-
         echo "Applying Nginx configuration for Grafana..."
         kubectl apply -f nginx-grafana.yaml
-    #
+    
+    # Get External IP
     - name: Get External IP
       id: get-ip
       run: |-
         IP=$(kubectl get svc grafana -n ${{ env.GRAFANA_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "External IP: $IP"
         echo "::set-output name=external_ip::$IP"
-    #
+    
+    # Display External IP
     - name: Display External IP
       run: echo "Grafana External IP ${{ steps.get-ip.outputs.external_ip }}"
 
+    # Send Metrics to Prometheus   
+    - name: Send Metrics to Prometheus
+      run: |-
+        echo "ci_pipeline_status{job='build', status='success'} 1" | curl --data-binary @- http://prometheus-server.monitoring.svc.cluster.local:9091/metrics/job/github-actions
+    
       
