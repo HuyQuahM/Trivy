@@ -15,7 +15,7 @@ data:
           "title": "CPU Usage",
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"monitoring\", pod!=\"\"}[5m])) by (pod)",
+              "expr": "rate(container_cpu_usage_seconds_total{namespace=\"monitoring\", pod!=\"\"}[5m]) by (pod)",
               "legendFormat": "{{namespace}}/{{pod}}",
               "interval": "10s"
             }
