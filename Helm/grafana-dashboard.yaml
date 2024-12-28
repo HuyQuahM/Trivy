@@ -20,8 +20,9 @@ data:
               "interval": "10s"
             }
           ]
-          "steppedLine": true,
-          "fill": 1
+          "lines": true,
+          "fill": 1,
+          "lineWidth": 2
         },
         {
           "type": "graph",
@@ -33,8 +34,9 @@ data:
               "interval": "10s"
             }
           ]
-          "steppedLine": true,
-          "fill": 1
+          "lines": true,
+          "fill": 1,
+          "lineWidth": 2
         },
         {
           "type": "graph",
@@ -46,8 +48,9 @@ data:
               "interval": "10s"
             }
           ]
-          "steppedLine": true,
-          "fill": 1
+          "lines": true,
+          "fill": 1,
+          "lineWidth": 2
         }
       ]
     }
