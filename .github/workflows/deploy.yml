@@ -69,6 +69,8 @@ jobs:
           --namespace ${{ env.GRAFANA_NAMESPACE }} \
           --set adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
           --set service.type=LoadBalancer \
+          --set sidecar.dashboards.enabled=true \
+          --set sidecar.dashboards.label=grafana_dashboard \
           --create-namespace
 
     # Build the Docker image
