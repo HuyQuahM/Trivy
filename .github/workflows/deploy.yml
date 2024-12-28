@@ -69,7 +69,7 @@ jobs:
           --namespace ${{ env.GRAFANA_NAMESPACE }} \
           --set adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
           --set service.type=LoadBalancer \
-          --values grafana-values.yaml \
+          --values ./Helm/grafana-values.yaml
           --create-namespace
 
     # Build the Docker image
