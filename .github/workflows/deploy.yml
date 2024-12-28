@@ -69,7 +69,8 @@ jobs:
           --namespace ${{ env.GRAFANA_NAMESPACE }} \
           --set adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
           --set service.type=LoadBalancer \
-          --values ./Helm/grafana-values.yaml
+          --set dashboardsConfigMaps.grafana-dashboard-k8s.name=grafana-dashboard-k8s \
+          --set dashboardsConfigMaps.grafana-dashboard-k8s.namespace=monitoring
           --create-namespace
 
     # Build the Docker image
